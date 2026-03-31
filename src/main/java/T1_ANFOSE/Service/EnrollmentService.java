@@ -32,6 +32,7 @@ public class EnrollmentService {
             return "No hay vacantes disponibles";
         }
 
+
         if(student.isNew() && course.getCredits() >12){
             return "Alumno nuevo no puede exceder 12 créditos";
         }
