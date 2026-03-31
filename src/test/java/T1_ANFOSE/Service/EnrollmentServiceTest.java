@@ -34,4 +34,49 @@ class EnrollmentServiceTest {
         assertEquals("No cumple prerequisitos",addResult);
     }
 
+
+    @Test
+    @DisplayName("should Not Enroll Student When There is a Schedule Conflict")
+    void shouldNotEnrollStudentWhenScheduleConflictExists(){
+        PrerequisiteService prerequisiteService = mock(PrerequisiteService.class);
+        ScheduleService scheduleService = mock(ScheduleService.class);
+        VacancyService vacancyService = mock(VacancyService.class);
+
+        when(prerequisiteService.hasApprovedPrerequisites("S1","C1")).thenReturn(true);
+        when(scheduleService.hasScheduleConflict("S1","C1")).thenReturn(true);
+
+        EnrollmentService service =  new EnrollmentService(prerequisiteService, scheduleService, vacancyService);
+
+        Student student = new Student("S1",false);
+        Course course = new Course("C1",5);
+
+        String addResult = service.enroll(student,course);
+
+        assertEquals("Horario cruzado",addResult);
+    }
+
+
+
+    @Test
+    @DisplayName("Should enroll successfully when all conditions are met")
+    void shouldEnrollSuccessfullyWhenAllConditionsAreMet(){
+        PrerequisiteService prerequisiteService = mock(PrerequisiteService.class);
+        ScheduleService scheduleService = mock(ScheduleService.class);
+        VacancyService vacancyService = mock(VacancyService.class);
+
+        when(prerequisiteService.hasApprovedPrerequisites("S1","C1")).thenReturn(true);
+        when(scheduleService.hasScheduleConflict("S1","C1")).thenReturn(false);
+        when(vacancyService.hasVacancy("C1")).thenReturn(true);
+
+        EnrollmentService service =  new EnrollmentService(prerequisiteService, scheduleService, vacancyService);
+
+        Student student = new Student("S1",false);
+        Course course = new Course("C1",10);
+
+        String addResult = service.enroll(student,course);
+
+        assertEquals("Matricula Exitosa",addResult);
+    }
+
+
 }

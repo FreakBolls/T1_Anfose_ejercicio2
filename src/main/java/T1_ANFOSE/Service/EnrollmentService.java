@@ -41,6 +41,6 @@ public class EnrollmentService {
             return "Excede máximo de créditos";
         }
 
-        return  "Matrçoiña exitosa";
+        return  "Matricula Exitosa";
     }
 }
